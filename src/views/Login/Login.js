@@ -9,6 +9,7 @@ import {
   Input,
   Button
 } from 'reactstrap';
+import { toast } from 'react-toastify';
 
 import { getServerBaseUrl } from '../../config';
 
@@ -18,24 +19,27 @@ const Login = () => {
 
 
   const handleFormSubmit = () => {
-    console.log('submit: ');
     
+    const emailIsValid = email.trim().length > 0;
+    const passwordIsValid = password.trim().length > 0;
 
+    (emailIsValid && passwordIsValid) ? login() : toast.error("Todos los campos son requeridos");
+  }
+
+  const login = () => {
     var url = `${getServerBaseUrl()}/auth/login`;
     var data = {"email": email, "password": password};
 
-    console.log(url);
-    console.log(data);
-
     fetch(url, {
-      method: 'POST', // or 'PUT'
-      body: JSON.stringify(data), // data can be `string` or {object}!
+      method: 'POST',
+      body: JSON.stringify(data),
       headers:{
         'Content-Type': 'application/json'
       }
-    }).then(res => res.json())
-    .catch(error => console.error('Error:', error))
-    .then(response => console.log('Success:', response));
+    })
+    .then(res => res.json())
+    .then(response => toast.success('Success:'))
+    .catch(error => toast.error("Something wrong !"));
   }
 
   return (

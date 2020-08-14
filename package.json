@@ -45,6 +45,9 @@
   "jest": {
     "setupFilesAfterEnv": [
       "<rootDir>/src/__test__/setupTest.js"
-    ]
+    ],
+    "moduleNameMapper": {
+      "\\.css$": "<rootDir>/src/__mocks__/styleMock.js"
+    }
   }
 }

@@ -16,14 +16,17 @@ import { getServerBaseUrl } from '../../config';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [formIsValid, setFormIsValid] = useState(false);
 
+  const validateForm = (currentEmail, currentPassword) => {
+    const emailIsValid = currentEmail.trim().length > 0;
+    const passwordIsValid = currentPassword.trim().length > 0;
+    
+    setFormIsValid(emailIsValid && passwordIsValid);
+  }
 
   const handleFormSubmit = () => {
-    
-    const emailIsValid = email.trim().length > 0;
-    const passwordIsValid = password.trim().length > 0;
-
-    (emailIsValid && passwordIsValid) ? login() : toast.error("Todos los campos son requeridos");
+    formIsValid ? login() : toast.error("Todos los campos son requeridos");
   }
 
   const login = () => {
@@ -49,29 +52,33 @@ const Login = () => {
           <h4 className='text-center'>Inicio de Sesion</h4>
           <Form>
             <FormGroup>
-              <Label for="exampleEmail">Email</Label>
+              <Label for="email">Email</Label>
               <Input 
                 type="email"
                 name="email"
-                id="exampleEmail"
                 placeholder="Ingrese email"
                 value={email}
-                onChange={({target}) => setEmail(target.value)}
+                onChange={({target}) => {
+                  setEmail(target.value);
+                  validateForm(target.value, password);
+                }}
               />
             </FormGroup>
             <FormGroup>
-              <Label for="examplePassword">Password</Label>
+              <Label for="password">Password</Label>
               <Input 
                 type="password"
                 name="password"
-                id="examplePassword"
                 placeholder="Ingrese password"
                 value={password}
-                onChange={({target}) => setPassword(target.value)}
+                onChange={({target}) => {
+                  setPassword(target.value);
+                  validateForm(email, target.value);
+                }}
               />
             </FormGroup>
             <Row className='justify-content-center'>
-              <Button type='button' onClick={handleFormSubmit}>Submit</Button>
+              <Button type='button' onClick={handleFormSubmit} disabled={!formIsValid}>Submit</Button>
             </Row>
           </Form>
         </Col>
